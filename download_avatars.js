@@ -1,21 +1,45 @@
-// require request module
+// require request and fs(file system) modules
 const request = require('request');
+const fs = require('fs');
+
 // require github token from secrets.js
 const token = require('./secrets').GITHUB_TOKEN;
-
 console.log('Welcome to the GitHub Avatar Downloader!');
 
-// error handler
-function showStatus(err, result){
+function downloadImageByURL(url, filePath){
+  request.get(url)
+          .on('error', function(err){
+            if (err) throw err;
+          })
+          .on('response', function(response){
+            console.log(`Target Avatar URL: ${url} --> ${filePath}`);
+            console.log('Response Status Code:', response.statusCode, response.statusMessage);
+            console.log('Downloading Github Avatar...');
+          })
+          .pipe(
+            fs.createWriteStream(filePath)
+              .on('finish', function(){
+              console.log('Download complete!');
+              console.log('=================================');
+            })     
+          );
+}
+
+// Show results or error if there is any
+function filterData(err, result){
   if (err) {
     console.log('Errors:', err);
   }
-  // Get object value of key avatar_url
-  let avatarUrl = result.map(obj => {
-    return obj.avatar_url;
+
+  let saveDir = './avatars/';
+  // Get user id and avatar_url
+  let urlUserName = result.map(obj => {
+    return [obj.avatar_url, `${saveDir}${obj.login}.jpg`];
   })
-  console.log('Result:', avatarUrl);
+  // downloadImageByURL(urlUserName[0][0], urlUserName[0][1]);
+  urlUserName.forEach(item => downloadImageByURL(item[0], item[1]));
 }
+
 
 // cb: callback function
 function getRepoContributors(repoOwner, repoName, cb){
@@ -34,7 +58,8 @@ function getRepoContributors(repoOwner, repoName, cb){
   });
 }
 
-let repoOwner = 'jquery';
-let repoName = 'jquery';
 
-getRepoContributors(repoOwner, repoName, showStatus);
+let repositoryOwner = process.argv.slice(2)[0];
+let repositoryName = process.argv.slice(2)[1];
+
+getRepoContributors(repositoryOwner, repositoryName, filterData);
