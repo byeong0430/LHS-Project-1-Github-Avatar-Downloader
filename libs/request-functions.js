@@ -1,8 +1,11 @@
+// require dotenv module and configure it
+require('dotenv').config();
 // require request and fs(file system) modules
 const request = require('request');
 const fs = require('fs');
-// require github token from secrets.js
-const token = require('./secrets').GITHUB_TOKEN;
+// Github token is saved in .env file
+const token = process.env.GITHUB_TOKEN;
+
 
 // Callback function to download image using url
 function downloadImageByURL(url, filePath){
