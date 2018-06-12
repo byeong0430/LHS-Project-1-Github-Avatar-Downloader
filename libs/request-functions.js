@@ -26,6 +26,14 @@ function downloadImageByURL(url, filePath){
 
 // cb: callback function
 function getRepoContributors(repoOwner, repoName, cb){
+  // Check if repoOwner and repoName were correctly entered from command line. If not, console.log an error message and end the function
+  if(typeof repoOwner === 'undefined' || typeof repoName === 'undefined'){
+    console.log('Please enter valid repo owner and name');
+    console.log('i.e.) node download_avatars.js <repoOwner> <repoName>');
+
+    return;
+  }
+
   // Request options
   const options = {
     url: `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
