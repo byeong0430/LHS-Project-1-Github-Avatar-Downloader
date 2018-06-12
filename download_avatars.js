@@ -10,7 +10,11 @@ function showStatus(err, result){
   if (err) {
     console.log('Errors:', err);
   }
-  console.log('Result:', result);
+  // Get object value of key avatar_url
+  let avatarUrl = result.map(obj => {
+    return obj.avatar_url;
+  })
+  console.log('Result:', avatarUrl);
 }
 
 // cb: callback function
@@ -24,7 +28,9 @@ function getRepoContributors(repoOwner, repoName, cb){
   };
   
   request(options, function(err, res, body){
-    cb(err, body);
+    // Convert JSON string to an array objects
+    let bodyArr = JSON.parse(body);
+    cb(err, bodyArr);
   });
 }
 
