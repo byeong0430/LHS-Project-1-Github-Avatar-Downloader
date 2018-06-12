@@ -59,7 +59,13 @@ function getRepoContributors(repoOwner, repoName, cb){
 }
 
 
+// Assign command-line variables
 let repositoryOwner = process.argv.slice(2)[0];
 let repositoryName = process.argv.slice(2)[1];
 
-getRepoContributors(repositoryOwner, repositoryName, filterData);
+if(typeof repositoryOwner === 'undefined' && typeof repositoryName === 'undefined'){
+  console.log('Please enter valid repo owner and name');
+  console.log('i.e.) node download_avatars.js <repoOwner> <repoName>');
+}else{
+  getRepoContributors(repositoryOwner, repositoryName, filterData);
+}
