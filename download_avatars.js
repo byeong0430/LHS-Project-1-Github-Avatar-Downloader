@@ -1,5 +1,4 @@
 // require fs and request-functions.js module
-const fs = require('fs');
 const requestFunctions = require('./libs/request-functions');
 const getRepoContributors = requestFunctions.getRepoContributors;
 const downloadImageByURL = requestFunctions.downloadImageByURL;
